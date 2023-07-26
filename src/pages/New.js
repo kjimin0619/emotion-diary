@@ -1,8 +1,14 @@
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
+import MyButton from "../components/MyButton";
+import MyHeader from "../components/MyHeader";
+import DiaryEditor from "../components/DiaryEditor";
+
 const New = () => {
   return (
     <div>
-      <h1>New</h1>
-      <p>이곳은 일기 추가 작성 페이지입니다</p>
+      <DiaryEditor />
     </div>
   );
 };

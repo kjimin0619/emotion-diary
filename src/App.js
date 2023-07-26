@@ -7,10 +7,6 @@ import Edit from "./pages/Edit";
 import New from "./pages/New";
 import Diary from "./pages/Diary";
 
-// components
-import MyButton from "./components/MyButton";
-import MyHeader from "./components/MyHeader";
-
 const reducer = (oldState, action) => {
   let newState = [];
   switch (action.type) {
@@ -74,6 +70,12 @@ const dummyData = [
     content: "오늘의 일기 5번",
     date: 1690283858489,
   },
+  {
+    id: 6,
+    emotion: 1,
+    content: "오늘의 일기 6번",
+    date: 1700284000000,
+  },
 ];
 
 function App() {
@@ -114,9 +116,6 @@ function App() {
       },
     });
   };
-
-  const env = process.env;
-  env.PUBLIC_URL = env.PUBLIC_URL || "";
 
   return (
     <DiaryStateContext.Provider value={data}>

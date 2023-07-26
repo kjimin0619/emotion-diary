@@ -43,7 +43,9 @@ const Home = () => {
         0
       ).getTime();
 
-      setData(diaryList.filter((it) => firstDay <= it.date <= lastDay));
+      setData(
+        diaryList.filter((it) => firstDay <= it.date && it.date <= lastDay)
+      );
     }
   }, [diaryList, curDate]);
 

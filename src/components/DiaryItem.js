@@ -2,6 +2,9 @@ import MyButton from "./MyButton";
 import { useNavigate } from "react-router-dom";
 
 const DiaryItem = ({ id, emotion, content, date }) => {
+  const env = process.env;
+  env.PUBLIC_URL = env.PUBLIC_URL || "";
+
   const navigate = useNavigate();
   const goDetail = () => {
     navigate(`/diary/${id}`);
