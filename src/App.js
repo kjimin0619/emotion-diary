@@ -21,12 +21,12 @@ const reducer = (oldState, action) => {
       break;
     }
     case "REMOVE": {
-      newState = oldState.filter((it) => it.id !== action.targetId);
+      newState = oldState.filter((it) => it.id !== action.id);
       break;
     }
     case "EDIT": {
       newState = oldState.map((it) =>
-        it.td === action.data.id ? { ...action.data } : it
+        it.id === action.data.id ? action.data : it
       );
       break;
     }
@@ -81,7 +81,7 @@ const dummyData = [
 function App() {
   // 일기 데이터 관리
   const [data, dispatch] = useReducer(reducer, dummyData);
-  const dataId = useRef(0);
+  const dataId = useRef(7);
 
   // create
   const onCreate = (date, content, emotion) => {
@@ -100,7 +100,7 @@ function App() {
   const onRemove = (targetId) => {
     dispatch({
       type: "REMOVE",
-      targetId: { targetId },
+      id: targetId,
     });
   };
 
@@ -111,8 +111,8 @@ function App() {
       data: {
         id: targetId,
         date: new Date(date).getTime(),
-        content: { content },
-        emotion: { emotion },
+        content: content,
+        emotion: emotion,
       },
     });
   };
@@ -126,7 +126,7 @@ function App() {
               {/* path가 index.js를 가리키고 있으면 Home을 렌더링 */}
               <Route path="/" element={<Home />} />
               <Route path="/new" element={<New />} />
-              <Route path="/edit" element={<Edit />} />
+              <Route path="/edit/:id" element={<Edit />} />
               <Route path="/diary/:id" element={<Diary />} />
             </Routes>
             {/* <RouteTest></RouteTest> */}

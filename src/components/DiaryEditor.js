@@ -1,60 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { DiaryDispatchContext } from "./../App.js";
 
 import MyButton from "./MyButton";
 import MyHeader from "./MyHeader";
 import EmotionItem from "./EmotionItem";
 
+import { getStringDate } from "../util/date.js";
+import { emotionList } from "../util/emotion.js";
+
 // 감정 배열
 const env = process.env;
 env.PUBLIC_URL = env.PUBLIC_URL || "";
 
-const emotionList = [
-  {
-    emotion_id: 1,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion1.png`,
-    emotion_descript: "완전 좋음",
-  },
-  {
-    emotion_id: 2,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion2.png`,
-    emotion_descript: "좋음",
-  },
-  {
-    emotion_id: 3,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion3.png`,
-    emotion_descript: "그럭저럭",
-  },
-  {
-    emotion_id: 4,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion4.png`,
-    emotion_descript: "나쁨",
-  },
-  {
-    emotion_id: 5,
-    emotion_img: process.env.PUBLIC_URL + `/assets/emotion5.png`,
-    emotion_descript: "끔찍함",
-  },
-];
-const DiaryEditor = () => {
+const DiaryEditor = ({ isEdit, originData }) => {
   const navigate = useNavigate();
-
-  // 날짜 형식 변환 함수
-  const getStringDate = (date) => {
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-
-    if (month < 10) {
-      month = `0${month}`;
-    }
-
-    if (day < 10) {
-      day = `0${day}`;
-    }
-    return `${year}-${month}-${day}`;
-  };
 
   // 감정 클릭시 이미지 변경 함수
   const handleClickEmote = (emotion) => {
@@ -70,20 +30,39 @@ const DiaryEditor = () => {
   const [date, setDate] = useState(getStringDate(new Date()));
 
   // 작성 완료 함수
-  const { onCreate } = useContext(DiaryDispatchContext);
+  const { onCreate, onEdit } = useContext(DiaryDispatchContext);
   const handleSubmit = () => {
     if (content.length < 1) {
       contentRef.current.focus();
       return;
     }
-    onCreate(date, content, emotion);
+
+    if (
+      window.confirm(
+        isEdit ? "일기를 수정하시겠습니까?" : "새로운 일기를 작성하시겠습니까?"
+      )
+    ) {
+      if (!isEdit) {
+        onCreate(date, content, emotion);
+      } else {
+        onEdit(originData.id, date, content, emotion);
+      }
+    }
     navigate("/", { replace: true }); // home으로 이동
   };
+
+  useEffect(() => {
+    if (isEdit) {
+      setDate(getStringDate(new Date(parseInt(originData.date))));
+      setEmotion(originData.emotion);
+      setContent(originData.content);
+    }
+  }, [isEdit, originData]);
 
   return (
     <div className="DiaryEditor">
       <MyHeader
-        headText={"새로운 일기쓰기"}
+        headText={isEdit ? "일기 수정하기" : "새로운 일기쓰기"}
         leftChild={
           <MyButton
             text={"뒤로가기"}
@@ -129,9 +108,9 @@ const DiaryEditor = () => {
           <h4>오늘의 일기</h4>
           <div className="input_box text_wrapper">
             <textarea
-              placeholder="오늘은 어땠나요"
               ref={contentRef}
               value={content}
+              placeholder="오늘은 어땠나요"
               onChange={(e) => setContent(e.target.value)}
             />
           </div>
