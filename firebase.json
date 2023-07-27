@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "site": "naomi-react-toy-project",
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

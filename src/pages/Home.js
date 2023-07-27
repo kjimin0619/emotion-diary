@@ -5,6 +5,12 @@ import MyButton from "./../components/MyButton";
 import DiaryList from "../components/DiaryList";
 
 const Home = () => {
+  // 마운트될 때 페이지 타이틀 변경
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `감정 일기장`;
+  }, []);
+
   // context 받아오기
   const diaryList = useContext(DiaryStateContext);
   const [data, setData] = useState([]);
@@ -56,22 +62,8 @@ const Home = () => {
     <div>
       <MyHeader
         headText={headText}
-        leftChild={
-          <MyButton
-            text={"<"}
-            onClick={() => {
-              decreaseMonth();
-            }}
-          ></MyButton>
-        }
-        rightChild={
-          <MyButton
-            text={">"}
-            onClick={() => {
-              increaseMonth();
-            }}
-          ></MyButton>
-        }
+        leftChild={<MyButton text={"<"} onClick={decreaseMonth}></MyButton>}
+        rightChild={<MyButton text={">"} onClick={increaseMonth}></MyButton>}
       ></MyHeader>
       <DiaryList diaryList={data}></DiaryList>
     </div>

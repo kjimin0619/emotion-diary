@@ -7,6 +7,12 @@ const Edit = () => {
   // 원본 데이터
   const [originData, setOriginData] = useState();
 
+  // 마운트될 때 페이지 타이틀 변경
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `감정 일기장 - ${id}번 일기 수정`;
+  }, []);
+
   // 페이지 이동함수 navigate
   const navigate = useNavigate();
   const { id } = useParams();

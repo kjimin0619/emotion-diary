@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { DiaryDispatchContext } from "./../App.js";
 
 import MyButton from "./MyButton";
@@ -17,9 +17,9 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const navigate = useNavigate();
 
   // 감정 클릭시 이미지 변경 함수
-  const handleClickEmote = (emotion) => {
+  const handleClickEmote = useCallback((emotion) => {
     setEmotion(emotion);
-  };
+  }, []);
 
   // 일기 작성 데이터 state
   const [content, setContent] = useState("");
@@ -30,7 +30,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const [date, setDate] = useState(getStringDate(new Date()));
 
   // 작성 완료 함수
-  const { onCreate, onEdit } = useContext(DiaryDispatchContext);
+  const { onCreate, onEdit, onRemove } = useContext(DiaryDispatchContext);
   const handleSubmit = () => {
     if (content.length < 1) {
       contentRef.current.focus();
@@ -49,6 +49,13 @@ const DiaryEditor = ({ isEdit, originData }) => {
       }
     }
     navigate("/", { replace: true }); // home으로 이동
+  };
+
+  const handleRemove = () => {
+    if (window.confirm("정말 삭제하시겠습니까")) {
+      onRemove(originData.id);
+      navigate("/", { replace: true });
+    }
   };
 
   useEffect(() => {
@@ -70,6 +77,15 @@ const DiaryEditor = ({ isEdit, originData }) => {
               navigate(-1);
             }}
           ></MyButton>
+        }
+        rightChild={
+          isEdit && (
+            <MyButton
+              text={"삭제하기"}
+              type={"negative"}
+              onClick={handleRemove}
+            ></MyButton>
+          )
         }
       ></MyHeader>
 
